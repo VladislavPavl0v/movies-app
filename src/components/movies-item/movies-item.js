@@ -1,16 +1,17 @@
 import React from "react";
 import { format } from "date-fns";
+import { Spin } from "antd";
 
 import "./movies-item.css";
 
 class MoviesItem extends React.Component {
   render() {
-    const { title, releaseData, overview, poster } = this.props;
+    const { title, releaseData, overview, poster, loading } = this.props;
     const posterImage = poster
       ? `https://image.tmdb.org/t/p/original${poster}`
       : null;
     const formatData = releaseData
-      ? format(new Date(releaseData), "MMMM d,y")
+      ? format(new Date(releaseData), "MMMM dd, yyyy")
       : "";
     const overviewSlice = (overview) => {
       if (overview.length > 200) {

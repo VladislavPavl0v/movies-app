@@ -4,7 +4,7 @@ import MoviesItem from "../movies-item";
 import "./movies-list.css";
 class MoviesList extends React.Component {
   render() {
-    const { moviesData } = this.props;
+    const { moviesData, loading } = this.props;
     return (
       <ul className="movies-list">
         {moviesData.map((item, index) => (
@@ -14,6 +14,7 @@ class MoviesList extends React.Component {
             releaseData={item.release_date}
             overview={item.overview}
             poster={item.poster_path}
+            loading={loading}
           />
         ))}
       </ul>

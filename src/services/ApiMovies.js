@@ -6,7 +6,8 @@ export default class ApiMovies {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNjA0MWE5MjRhY2Y3MjBhYWIyOTc2ZmRlZjE0YWQ0YSIsInN1YiI6IjY0ZWUwY2Q4NGNiZTEyMDExYjkxMTY2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.SiJ7rrxEWu3QL_MOInxC7Q9MmiiMU4WPHTtUSu8AG0s'
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNjA0MWE5MjRhY2Y3MjBhYWIyOTc2ZmRlZjE0YWQ0YSIsInN1YiI6IjY0ZWUwY2Q4NGNiZTEyMDExYjkxMTY2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.SiJ7rrxEWu3QL_MOInxC7Q9MmiiMU4WPHTtUSu8AG0s",
       },
     };
 
@@ -27,8 +28,6 @@ export default class ApiMovies {
     return this.getResource();
   }
 }
-
-
 
 const api = new ApiMovies();
 
