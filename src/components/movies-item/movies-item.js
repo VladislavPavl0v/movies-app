@@ -1,12 +1,12 @@
 import React from "react";
 import { format } from "date-fns";
-import { Spin } from "antd";
+
 
 import "./movies-item.css";
 
 class MoviesItem extends React.Component {
   render() {
-    const { title, releaseData, overview, poster, loading } = this.props;
+    const { title, releaseData, overview, poster} = this.props;
     const posterImage = poster
       ? `https://image.tmdb.org/t/p/original${poster}`
       : null;
@@ -19,7 +19,7 @@ class MoviesItem extends React.Component {
       }
       return overview;
     };
-
+  
     return (
       <li className="movies-item">
         <img src={posterImage} alt="Movie Poster" className="poster-image" />

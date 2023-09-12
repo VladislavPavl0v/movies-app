@@ -1,7 +1,7 @@
 export default class ApiMovies {
   _apiBase = "https://api.themoviedb.org/3/search/movie";
 
-  async getResource() {
+  async getResource(query, page) {
     const options = {
       method: "GET",
       headers: {
@@ -12,7 +12,7 @@ export default class ApiMovies {
     };
 
     const res = await fetch(
-      `${this._apiBase}?query=return&include_adult=true&language=en-US&page=1`,
+      `${this._apiBase}?${query}&include_adult=true&language=en-US&page=${page}`,
       options
     );
 
@@ -24,19 +24,8 @@ export default class ApiMovies {
     return await res.json();
   }
 
-  getAllMovies() {
-    return this.getResource();
+  getAllMovies(searchValue, page) {
+    return this.getResource(`query=${searchValue}`, page);
   }
+
 }
-
-const api = new ApiMovies();
-
-api
-  .getAllMovies()
-  .then((item) => {
-    // Вывести полученные данные в консоль
-    console.log(item);
-  })
-  .catch((error) => {
-    console.error(error); // Обработка ошибок, если что-то пошло не так
-  });
