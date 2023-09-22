@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Space, Spin } from "antd";
+import { Space, Spin, Alert } from "antd";
 import MoviesItem from "../movies-item";
-import { Alert } from "antd";
+
 
 import "./movies-list.css";
 class MoviesList extends React.Component {

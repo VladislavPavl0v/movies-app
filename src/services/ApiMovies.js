@@ -52,7 +52,6 @@ export default class ApiMovies {
       const data = await response.json();
       return data.genres;
     } catch (error) {
-      console.error("Error fetching genres:", error);
       return [];
     }
   }

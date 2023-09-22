@@ -60,9 +60,7 @@ class App extends React.Component {
       this.setState({ sessionId }, () => {
         this.apiRatingMovies
           .addRateMovies(movieId, sessionId, value)
-          .then((responseData) => {
-            console.log("Response from addRateMovies:", responseData);
-          })
+         
           .catch((error) => {
             this.setError(`Произошла ошибка: ${error.message}`);
           });
@@ -131,7 +129,7 @@ class App extends React.Component {
   async addRateMovie() {
     const { movieId, sessionId, value } = this.state;
     try {
-      const responseData = await this.apiRatingMovies.addRateMovies(movieId, sessionId, value);
+      await this.apiRatingMovies.addRateMovies(movieId, sessionId, value);
     } catch (error) {
       this.setError(`Произошла ошибка: ${error.message}`);
     }
