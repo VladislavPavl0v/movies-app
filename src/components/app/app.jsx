@@ -154,7 +154,6 @@ class App extends React.Component {
 
   async getRatedMovies(sessionId, pageRate) {
     try {
-
       const responseData = await this.apiRatingMovies.getRatedMovies(sessionId, pageRate);
       this.setState({
         ratedMovies: responseData.results,
