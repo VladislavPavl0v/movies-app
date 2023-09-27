@@ -1,16 +1,18 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import PropTypes from "prop-types";
 import "./footer.css";
 import { Pagination } from "antd";
 
 function Footer(props) {
-  const { page, onPageChange, totalPages } = props;
+  const { page, onPageChange, totalPages} = props;
 
   const handlePageChange = (pageNumber) => {
     if (onPageChange) {
-      onPageChange(pageNumber);
+      onPageChange(pageNumber); 
     }
   };
+
 
   return (
     <div className="footer">

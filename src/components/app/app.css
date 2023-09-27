@@ -20,7 +20,13 @@ button {
 }
 
 .offline {
-  margin-top: 50vh; 
-  transform: translateY(-50%); 
+  margin-top: 50vh;
+  transform: translateY(-50%);
   margin-left: 50vh;
+}
+
+@media screen  and (width <= 996px) {
+  .app {
+    width: 420px;
+  }
 }

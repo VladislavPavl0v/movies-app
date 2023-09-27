@@ -1,17 +1,20 @@
+export const BASE_URL = "https://api.themoviedb.org/3";
+export const TOKEN =
+  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyODM5YWM1ZDZlYTQ5NTc0NGI3ZDJjNDU4Mzc3NjM3NyIsInN1YiI6IjY0ZWUwY2Q4NGNiZTEyMDExYjkxMTY2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YGDovR5zaepjgSBfOUoH4jxONCqrTHHw7A6f0H3WCaE";
+
 export default class ApiMovies {
   async getResource(query, page) {
     const options = {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyODM5YWM1ZDZlYTQ5NTc0NGI3ZDJjNDU4Mzc3NjM3NyIsInN1YiI6IjY0ZWUwY2Q4NGNiZTEyMDExYjkxMTY2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YGDovR5zaepjgSBfOUoH4jxONCqrTHHw7A6f0H3WCaE",
+        Authorization: TOKEN,
       },
     };
 
     const res = await fetch(
-      `https://api.themoviedb.org/3/search/movie?${query}&include_adult=true&language=en-US&page=${page}`,
-      options
+      `${BASE_URL}/search/movie?${query}&include_adult=true&language=en-US&page=${page}`,
+      options,
     );
 
     if (!res.ok) {
@@ -36,16 +39,12 @@ export default class ApiMovies {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyODM5YWM1ZDZlYTQ5NTc0NGI3ZDJjNDU4Mzc3NjM3NyIsInN1YiI6IjY0ZWUwY2Q4NGNiZTEyMDExYjkxMTY2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YGDovR5zaepjgSBfOUoH4jxONCqrTHHw7A6f0H3WCaE",
+        Authorization: TOKEN,
       },
     };
 
     try {
-      const response = await fetch(
-        "https://api.themoviedb.org/3/genre/movie/list?language=en",
-        options
-      );
+      const response = await fetch(`${BASE_URL}/genre/movie/list?language=en`, options);
       if (!response.ok) {
         throw new Error("Failed to fetch genres");
       }

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import { Alert } from "antd";
 import ApiMovies from "../../services/ApiMovies";
@@ -7,7 +8,7 @@ import Footer from "../footer";
 import HeaderBar from "../header-bar";
 
 import MoviesList from "../movies-list";
-import { MoviesProvider } from "../movies-services-context";
+import { MoviesProvider } from "../../movies-services-context";
 
 import "./app.css";
 
@@ -28,13 +29,15 @@ class App extends React.Component {
       activeTab: "1",
       genres: [],
       error: null,
+      totalPagesRate: 1,
+      pageRate: 1,
     };
   }
 
   setError = (errorMessage) => {
     this.setState({ error: errorMessage });
   };
-  
+
   searchChange = (value) => {
     this.setState({ searchValue: value, page: 1 }, () => {
       this.fetchMovies();
@@ -42,30 +45,46 @@ class App extends React.Component {
   };
 
   handlePageChange = (pageNumber) => {
-    this.setState({ page: pageNumber }, () => {
-      this.fetchMovies();
-    });
+    const { activeTab, sessionId } = this.state;
+
+    if (activeTab === "1") {
+      this.setState({ page: pageNumber }, () => {
+        this.fetchMovies();
+      });
+    } else if (activeTab === "2") {
+      this.getRatedMovies(sessionId, pageNumber);
+    }
   };
 
+  saveSessionIdToLocalStorage = (sessionId) => {
+    localStorage.setItem("sessionId", sessionId);
+  };
+
+  getSessionIdFromLocalStorage = () => localStorage.getItem("sessionId");
+
   async componentDidMount() {
-    const { value, movieId } = this.state;
+    const { value, movieId, pageRate } = this.state;
+
     this.apiMovies = new ApiMovies();
     this.apiRatingMovies = new ApiRatingMovies();
     window.addEventListener("online", this.handleOnlineStatus);
     window.addEventListener("offline", this.handleOnlineStatus);
 
     try {
-      const sessionData = await this.apiRatingMovies.guestSession();
-      const sessionId = sessionData.guest_session_id;
-      this.setState({ sessionId }, () => {
-        this.apiRatingMovies
-          .addRateMovies(movieId, sessionId, value)
-         
-          .catch((error) => {
-            this.setError(`Произошла ошибка: ${error.message}`);
-          });
-        this.getRatedMovies(sessionId);
-      });
+      const storedSessionId = this.getSessionIdFromLocalStorage();
+
+      if (storedSessionId) {
+        this.setState({ sessionId: storedSessionId });
+      } else {
+        const sessionData = await this.apiRatingMovies.guestSession();
+        const sessionId = sessionData.guest_session_id;
+
+        this.saveSessionIdToLocalStorage(sessionId);
+        this.apiRatingMovies.addRateMovies(movieId, sessionId, value).catch((error) => {
+          this.setError(`Произошла ошибка: ${error.message}`);
+        });
+        this.getRatedMovies(sessionId, pageRate);
+      }
     } catch (error) {
       this.setError(`Произошла ошибка: ${error.message}`);
     }
@@ -118,8 +137,6 @@ class App extends React.Component {
       });
   }
 
-
-
   rateData = (value, movieId) => {
     this.setState({ value, movieId }, () => {
       this.addRateMovie();
@@ -135,29 +152,45 @@ class App extends React.Component {
     }
   }
 
-  async getRatedMovies(sessionId) {
+  async getRatedMovies(sessionId, pageRate) {
     try {
-      const responseData = await this.apiRatingMovies.getRatedMovies(sessionId);
-      this.setState({ ratedMovies: responseData.results });
+
+      const responseData = await this.apiRatingMovies.getRatedMovies(sessionId, pageRate);
+      this.setState({
+        ratedMovies: responseData.results,
+        totalPagesRate: responseData.total_pages,
+        pageRate,
+      });
     } catch (error) {
       this.setError(`Произошла ошибка: ${error.message}`);
     }
   }
 
   handleTabChange = (activeTab) => {
+    const { sessionId } = this.state;
+
     this.setState({ activeTab }, () => {
       if (activeTab === "1") {
         this.fetchMovies();
       } else if (activeTab === "2") {
-        this.getRatedMovies(this.state.sessionId);
+        this.getRatedMovies(sessionId, this.state.pageRate);
       }
     });
   };
 
-
   render() {
-    const { moviesData, loading, online, page, totalPages, ratedMovies, activeTab, genres } =
-      this.state;
+    const {
+      moviesData,
+      loading,
+      online,
+      page,
+      totalPages,
+      ratedMovies,
+      activeTab,
+      genres,
+      totalPagesRate,
+      pageRate,
+    } = this.state;
 
     if (!online) {
       return <div className="offline">no internet, please check your connection...</div>;
@@ -173,7 +206,11 @@ class App extends React.Component {
           ) : (
             <MoviesList moviesData={ratedMovies} loading={loading} rateData={this.rateData} />
           )}
-          <Footer page={page} onPageChange={this.handlePageChange} totalPages={totalPages} />
+          <Footer
+            page={activeTab === "1" ? page : pageRate}
+            onPageChange={this.handlePageChange}
+            totalPages={activeTab === "1" ? totalPages : totalPagesRate * 10}
+          />
         </section>
       </MoviesProvider>
     );

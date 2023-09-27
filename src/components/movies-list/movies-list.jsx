@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { Space, Spin, Alert } from "antd";
 import MoviesItem from "../movies-item";
 
-
 import "./movies-list.css";
 class MoviesList extends React.Component {
   render() {
@@ -11,11 +10,7 @@ class MoviesList extends React.Component {
 
     if (loading) {
       return (
-        <Space
-          direction="vertical"
-          style={{ width: "100%" }}
-          className="loading-spin"
-        >
+        <Space direction="vertical" style={{ width: "100%" }} className="loading-spin">
           <Spin tip="Loading" size="large" className="spin">
             <div className="content" />
           </Spin>
@@ -42,6 +37,7 @@ class MoviesList extends React.Component {
             movieId={item.id}
             rateData={rateData}
             genresId={item.genre_ids}
+            rating={item.rating}
           />
         ))}
       </ul>
@@ -55,11 +51,10 @@ MoviesList.defaultProps = {
   rateData: null,
 };
 
-
 MoviesList.propTypes = {
   moviesData: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
-  rateData: PropTypes.func, 
+  rateData: PropTypes.func,
 };
 
 export default MoviesList;

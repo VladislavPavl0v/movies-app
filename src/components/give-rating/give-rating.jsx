@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Rate } from "antd";
 import "./give-rating.css";
 
-function GiveRating({ movieId, rateData }) {
+function GiveRating({ movieId, rateData, rating }) {
   const rateStyle = { fontSize: 16 };
   const rateClick = (value) => {
     if (typeof rateData === "function") {
@@ -11,14 +11,25 @@ function GiveRating({ movieId, rateData }) {
     }
   };
 
-  return <Rate style={rateStyle} count={10} allowClear={false} allowHalf onChange={rateClick} />;
+  return (
+    <Rate
+      style={rateStyle}
+      count={10}
+      allowClear={false}
+      allowHalf
+      onChange={rateClick}
+      defaultValue={rating}
+    />
+  );
 }
 GiveRating.propTypes = {
   movieId: PropTypes.number.isRequired,
   rateData: PropTypes.func.isRequired,
+  rating: PropTypes.number.isRequired,
 };
 GiveRating.defaultProps = {
   movieId: 0,
   rateData: () => {},
+  rating: 0,
 };
 export default GiveRating;

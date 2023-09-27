@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import VoteAverage from "../voteAverage";
 import GiveRating from "../give-rating";
 import { format } from "date-fns";
-import noImage from "../image/noimage.jpg";
+import noImage from "../../asseds/noimage.jpg";
 import GenresList from "../genres-list";
-import { MoviesContext } from "../movies-services-context"; 
+import { MoviesContext } from "../../movies-services-context";
 
 import "./movies-item.css";
 
@@ -20,13 +20,11 @@ class MoviesItem extends React.Component {
       movieId,
       rateData,
       genresId,
+      rating,
     } = this.props;
-    const posterImage = poster
-      ? `https://image.tmdb.org/t/p/original${poster}`
-      : noImage;
-    const formatData = releaseData
-      ? format(new Date(releaseData), "MMMM dd, yyyy")
-      : "";
+
+    const posterImage = poster ? `https://image.tmdb.org/t/p/original${poster}` : noImage;
+    const formatData = releaseData ? format(new Date(releaseData), "MMMM dd, yyyy") : "";
     const overviewSlice = (overview) => {
       if (overview.length > 110) {
         return overview.slice(0, 110) + "...";
@@ -51,11 +49,7 @@ class MoviesItem extends React.Component {
 
           return (
             <li className="movies-item">
-              <img
-                src={posterImage}
-                alt="Movie Poster"
-                className="poster-image"
-              />
+              <img src={posterImage} alt="Movie Poster" className="poster-image" />
               <section className="movies-description">
                 <div className="movies-description__top">
                   <h5 className="title">{titleSlice(title)}</h5>
@@ -65,7 +59,7 @@ class MoviesItem extends React.Component {
                 {genreNames.length > 0 && <GenresList genres={genreNames} />}
                 <span className="overview">{overviewSlice(overview)}</span>
                 <div className="give-rating">
-                  <GiveRating movieId={movieId} rateData={rateData} />
+                  <GiveRating movieId={movieId} rateData={rateData} rating={rating} />
                 </div>
               </section>
             </li>
@@ -84,10 +78,12 @@ MoviesItem.propTypes = {
   movieId: PropTypes.number.isRequired,
   rateData: PropTypes.func.isRequired,
   genresId: PropTypes.arrayOf(PropTypes.number).isRequired,
+  rating: PropTypes.number.isRequired,
 };
 
 MoviesItem.defaultProps = {
   releaseData: "",
   poster: "",
+  rating: 0,
 };
 export default MoviesItem;

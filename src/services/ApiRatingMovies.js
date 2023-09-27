@@ -1,27 +1,36 @@
 import axios from "axios";
-
+import { BASE_URL, TOKEN } from "./ApiMovies";
 const apiKey = "2839ac5d6ea495744b7d2c4583776377";
+
 export default class ApiRatingMovies {
+  constructor() {
+    this.baseURL = BASE_URL;
+    this.baseTOKEN = TOKEN;
+  }
+
   async guestSession() {
     try {
       const response = await axios({
         method: "GET",
-        url: "https://api.themoviedb.org/3/authentication/guest_session/new",
+        url: `${this.baseURL}/authentication/guest_session/new`,
         headers: {
           accept: "application/json",
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyODM5YWM1ZDZlYTQ5NTc0NGI3ZDJjNDU4Mzc3NjM3NyIsInN1YiI6IjY0ZWUwY2Q4NGNiZTEyMDExYjkxMTY2MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.YGDovR5zaepjgSBfOUoH4jxONCqrTHHw7A6f0H3WCaE",
+          Authorization: this.baseTOKEN,
         },
       });
 
-      return response.data;
+      if (!response.ok) {
+        return response.data;
+      } else {
+        throw new Error(`Failed to get guest session. Status: ${response.status}`);
+      }
     } catch (error) {
       throw error;
     }
   }
 
   async addRateMovies(movieId, sessionId, value) {
-    const url = `https://api.themoviedb.org/3/movie/${movieId}/rating?api_key=${apiKey}`;
+    const url = `${this.baseURL}/movie/${movieId}/rating?api_key=${apiKey}`;
 
     const data = {
       value,
@@ -38,19 +47,26 @@ export default class ApiRatingMovies {
 
     try {
       const response = await axios.post(url, data, { headers, params });
-      return response.data;
+      if (!response.ok) {
+        return response.data;
+      } else {
+        throw new Error(`Failed to add movie rating. Status: ${response.status}`);
+      }
     } catch (error) {
       throw error;
     }
   }
 
-  async getRatedMovies(sessionId) {
-    const url = `https://api.themoviedb.org/3/guest_session/${sessionId}/rated/movies?api_key=${apiKey}`;
+  async getRatedMovies(sessionId, pageRate) {
+    if (typeof pageRate === "undefined") {
+      pageRate = 1;
+    }
+    const url = `${this.baseURL}/guest_session/${sessionId}/rated/movies?api_key=${apiKey}`;
 
     const params = {
       language: "en-US",
+      page: pageRate.toString(),
       sort_by: "created_at.asc",
-      page: "1",
     };
     const headers = {
       accept: "application/json",
@@ -58,7 +74,11 @@ export default class ApiRatingMovies {
 
     try {
       const response = await axios.get(url, { params, headers });
-      return response.data;
+      if (!response.ok) {
+        return response.data;
+      } else {
+        throw new Error(`Failed to get rated movies. Status: ${response.status}`);
+      }
     } catch (error) {
       throw error;
     }
